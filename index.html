@@ -368,8 +368,39 @@
   <div class="footer">Powered by Claude · Built by Yash</div>
 </div>
 
+<!-- API Key Setup Screen -->
+<div id="setup-screen" style="display:none;position:fixed;inset:0;background:rgba(8,8,12,0.97);backdrop-filter:blur(20px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="width:100%;max-width:400px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:32px;text-align:center;">
+    <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#4c1d95,#7c3aed);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:24px;">🔑</div>
+    <h2 style="font-size:17px;font-weight:600;color:#f4f4f5;margin-bottom:8px;letter-spacing:-0.02em;">One-time setup</h2>
+    <p style="font-size:13px;color:#a1a1aa;margin-bottom:24px;line-height:1.6;">Enter your Anthropic API key to power the chat.<br/>It stays in your browser — never uploaded anywhere.</p>
+    <input id="key-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off"
+      style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:11px 14px;font-family:'Inter',sans-serif;font-size:13.5px;color:#f4f4f5;outline:none;margin-bottom:12px;letter-spacing:0.02em;"/>
+    <button onclick="saveKey()"
+      style="width:100%;background:#7c3aed;border:none;border-radius:9px;padding:11px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:#fff;cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.5);">
+      Start chatting
+    </button>
+    <p style="font-size:11px;color:#3f3f46;margin-top:16px;">Get a key at console.anthropic.com</p>
+  </div>
+</div>
+
 <script>
-  const API_KEY = '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';
+  let API_KEY = localStorage.getItem('yash_api_key') || '';
+
+  function saveKey() {
+    const val = document.getElementById('key-input').value.trim();
+    if (!val.startsWith('sk-ant-')) {
+      alert('That doesn\'t look right — make sure it starts with sk-ant-');
+      return;
+    }
+    localStorage.setItem('yash_api_key', val);
+    API_KEY = val;
+    document.getElementById('setup-screen').style.display = 'none';
+  }
+
+  if (!API_KEY) {
+    document.getElementById('setup-screen').style.display = 'flex';
+  }
 
   /* ── Time-aware context ── */
   function getTimeContext() {
