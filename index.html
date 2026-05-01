@@ -524,10 +524,15 @@ Rules:
       });
       const data = await res.json();
       removeTyping();
-      appendMsg('assistant', data.content?.[0]?.text ?? 'Something went wrong — please try again.');
-    } catch {
+      if (data.content?.[0]?.text) {
+        appendMsg('assistant', data.content[0].text);
+      } else {
+        const errMsg = data.error?.message ?? JSON.stringify(data);
+        appendMsg('assistant', 'API error: ' + errMsg);
+      }
+    } catch (e) {
       removeTyping();
-      appendMsg('assistant', 'Connection error — please try again.');
+      appendMsg('assistant', 'Connection error: ' + e.message);
     }
   }
 
